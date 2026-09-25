@@ -5,6 +5,7 @@ import { openDatabase } from './db.js';
 const production = process.argv.includes('--production') || process.env.NODE_ENV === 'production';
 const db = openDatabase();
 const app = createApp(db,{production});
+app.set('trust proxy', 1);
 if (production) {
   app.use(express.static(resolve('dist')));
   app.get('/{*path}', (req,res) => res.sendFile(resolve('dist/index.html')));
