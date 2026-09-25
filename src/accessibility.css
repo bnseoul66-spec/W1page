@@ -1,0 +1,18 @@
+/* Secondary text stays quiet without sacrificing contrast. Fonts are self-hosted. */
+:root{--muted:#65705f}
+h1,h2,h3,p{word-break:keep-all;overflow-wrap:anywhere}
+.brand-tag,.nav-label,.workspace small,.sidebar-profile small,nav a,.breadcrumb,.date-label,.eyebrow,.page-heading p,.tiny,.stat-label,.stat p,.stat-number small,.label-meta,.optional,.input-unit span,.email,footer,.empty p,.record-detail p,.record-count small,.year-picker,.month-labels,.day-labels,.graph-footer,.legend,.label-row,.auth-note,.progress-heading,.pill.neutral{color:#65715e}
+.hero-tag,.hero p,.little-note p,.little-note .text-btn,.challenge-card .eyebrow,.challenge-card>.text-btn,.progress-heading b,.stamp,.stamp-row>span,.hero-copy p,.notice,.notice>span{color:#58694d}
+.hero-tag,.nav-label,.eyebrow{font-size:10px}
+.page-heading p,.stat p,.hero p,.notice,.workspace small,.sidebar-profile small,.little-note p,.challenge-card .muted,.graph-card .muted,.empty p,.record-detail p{font-size:11px}
+.tiny,.label-meta,.optional,.month-labels,.day-labels,.graph-footer,.legend,.entry-card .stack>.tiny,.record-count small,footer{font-size:10px}
+label,.label-row{font-size:11px}
+input,textarea,select{font-size:12px}
+input::placeholder,textarea::placeholder{color:#6f7a67;font-size:11px}
+.segmented button{font-size:10px}.segmented button.active{color:#526a42}.stamp.done{color:#4c6a38}.graph-footer b{color:#49683b}
+.btn.small-btn{font-size:11px}.record-detail b{font-size:11px}.recent .tiny{font-size:10px}
+th{color:#64725a}.empty h3{color:#627354}.text-btn{font-size:11px}.challenge-card>.text-btn{font-size:11px}
+.record-count{color:#526f40}.segmented button{color:#616f56}.avatar{color:#546248}
+.dashboard-grid>*{min-width:0}.left-stack,.graph-card,.graph-scroll{min-width:0}
+@media(max-width:900px){.dashboard-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:640px){.sidebar{display:none;visibility:hidden}.sidebar.open{display:flex;visibility:visible}.hero p{max-width:270px}.notice p{font-size:10px}.hero-tag,.nav-label,.eyebrow{font-size:9px}.stat p{font-size:10px}.graph-footer,.legend{font-size:9px}.page-heading p{font-size:11px}.graph-card .section-heading{gap:7px}.hero-art{opacity:.14}.workspace small{font-size:10px!important}input,textarea,select{font-size:16px}.input-icon input{font-size:14px}.toast{max-width:94vw}}

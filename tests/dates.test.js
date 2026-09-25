@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { calculateStats, todayKST, addDays, isDate } from '../shared/dates.js';
+const user={challenge_start:'2026-08-25',challenge_days:30};
+const stats=(dates,today='2026-09-22')=>calculateStats(dates.map(d=>({entry_date:d,character_count:500})),user,today);
+test('KST midnight is independent of host timezone',()=>{assert.equal(todayKST(new Date('2026-09-21T14:59:59Z')),'2026-09-21');assert.equal(todayKST(new Date('2026-09-21T15:00:00Z')),'2026-09-22');});
+test('reject invalid or normalized dates; leap date accepted',()=>{assert.equal(isDate('2026-02-30'),false);assert.equal(isDate('2026-13-01'),false);assert.equal(isDate('2024-02-29'),true);assert.equal(isDate('2026-9-1'),false);assert.equal(isDate('not-a-date'),false);});
+test('empty records give zero attendance and streak',()=>{const s=stats([]);assert.equal(s.streak,0);assert.equal(s.totalDays,0);assert.equal(s.totalCharacters,0);});
+test('streak includes today and bridges month/year boundaries',()=>{assert.equal(stats(['2026-09-20','2026-09-21','2026-09-22']).streak,3);assert.equal(stats(['2025-12-30','2025-12-31','2026-01-01'],'2026-01-01').streak,3);});
+test('no check-in today preserves streak ending yesterday',()=>{assert.equal(stats(['2026-09-20','2026-09-21']).streak,2);});
+test('missed yesterday and today resets streak, tracks longest',()=>{const s=stats(['2026-09-18','2026-09-19','2026-09-20']);assert.equal(s.streak,0);assert.equal(s.longest,3);});
+test('future records excluded and duplicates cannot inflate attendance',()=>{const s=stats(['2026-09-21','2026-09-21','2026-09-23']);assert.equal(s.streak,1);assert.equal(s.totalDays,1);});
+test('challenge calendar day, actual attendance, and end differ',()=>{const s=stats(['2026-08-24','2026-08-25','2026-09-22']);assert.equal(s.challengeDay,29);assert.equal(s.challengeAttendance,2);assert.equal(s.challengeEnd,'2026-09-23');assert.equal(stats([],'2026-09-30').challengeDay,30);assert.equal(stats([],'2026-09-30').challengeEnded,true);assert.equal(stats([],'2026-08-01').challengeDay,0);});
+test('date arithmetic supports leap day',()=>{assert.equal(addDays('2024-03-01',-1),'2024-02-29');});

@@ -1,0 +1,26 @@
+# Independent SQLite deployment, NOT a YouBase deployment.
+# Persistent disk requires a paid Render service. Review price before approval.
+services:
+  - type: web
+    name: writeon-challenge
+    runtime: docker
+    plan: starter
+    region: singapore
+    autoDeployTrigger: off
+    healthCheckPath: /api/health
+    disk:
+      name: writeon-data
+      mountPath: /app/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_PATH
+        value: /app/data/writeon.sqlite
+      - key: TRUST_PROXY
+        value: 1
+# RENDER_EXTERNAL_URL is automatically used as the trusted origin.
+# Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in the Render dashboard.
+# For a custom domain, set APP_ORIGIN=https://your-domain.example (no trailing slash).
