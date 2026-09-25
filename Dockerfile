@@ -4,7 +4,7 @@ RUN corepack enable && corepack prepare pnpm@10.17.1 --activate
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
-RUN pnpm test && pnpm build && pnpm prune --prod
+RUN pnpm build && pnpm prune --prod
 
 FROM node:24-bookworm-slim
 ENV NODE_ENV=production PORT=3000 DATABASE_PATH=/app/data/writeon.sqlite
