@@ -6,14 +6,12 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// 기존 index.js 및 앱 코드와 호환되는 openDatabase 객체 정의
 export function openDatabase() {
   return {
     exec: async (sql) => {
       return await pool.query(sql);
     },
     get: async (sql, params = []) => {
-      // SQLite ? 파라미터를 PostgreSQL $1, $2 로 변환
       let i = 1;
       const pgSql = sql.replace(/\?/g, () => `$${i++}`);
       const res = await pool.query(pgSql, params);
@@ -27,9 +25,24 @@ export function openDatabase() {
     },
     run: async (sql, params = []) => {
       let i = 1;
-      const pgSql = sql.replace(/\?/g, () => `$${i++}`);
+      let pgSql = sql.replace(/\?/g, () => `$${i++}`);
+
+      // SQLite 전용 구문(INSERT OR IGNORE)을 PostgreSQL 구문으로 자동 변환
+      if (pgSql.toUpperCase().includes('INSERT OR IGNORE')) {
+        pgSql = pgSql.replace(/INSERT OR IGNORE/i, 'INSERT');
+        pgSql += ' ON CONFLICT DO NOTHING';
+      }
+
+      // INSERT 실행 시 SQLite의 lastID 반환을 모방하기 위해 RETURNING id 자동 추가
+      if (pgSql.toUpperCase().trim().startsWith('INSERT') && !pgSql.toUpperCase().includes('RETURNING')) {
+         pgSql += ' RETURNING id';
+      }
+
       const res = await pool.query(pgSql, params);
-      return { lastID: res.rows[0]?.id, changes: res.rowCount };
+      return {
+        lastID: res.rows && res.rows.length > 0 ? res.rows[0].id : undefined,
+        changes: res.rowCount
+      };
     }
   };
 }
